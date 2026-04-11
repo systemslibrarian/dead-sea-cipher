@@ -11,11 +11,42 @@ import { crackCaesar } from './analysis/caesar-crack.ts';
 import { SCRIPTURE_REFERENCES, ERAS, FULL_ARC_REFLECTION, LESSONS_MAP } from './content/scripture.ts';
 
 const app = document.getElementById('app')!;
+const themeRoot = document.documentElement;
+
+function getTheme(): 'dark' | 'light' {
+  return themeRoot.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+}
+
+function applyThemeToggleState(button: HTMLButtonElement): void {
+  const theme = getTheme();
+  const isDark = theme === 'dark';
+  button.textContent = isDark ? '🌙' : '☀️';
+  button.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
+function initThemeToggle(): void {
+  if (!themeRoot.hasAttribute('data-theme')) {
+    themeRoot.setAttribute('data-theme', 'dark');
+  }
+
+  const toggle = document.getElementById('theme-toggle') as HTMLButtonElement | null;
+  if (!toggle) return;
+
+  applyThemeToggleState(toggle);
+
+  toggle.addEventListener('click', () => {
+    const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+    themeRoot.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    applyThemeToggleState(toggle);
+  });
+}
 
 // ─── Build the full HTML ───
 function buildApp(): void {
   app.innerHTML = `
     <header class="site-header">
+      <button id="theme-toggle" class="theme-toggle" type="button"></button>
       <h1>Dead Sea Cipher</h1>
       <div class="arc-subtitle">Atbash (~600 BCE) → AES-256-GCM (2001 CE)</div>
     </header>
@@ -35,6 +66,7 @@ function buildApp(): void {
     <div id="panel-full-arc" class="era-panel">${buildFullArcPanel()}</div>
   `;
 
+  initThemeToggle();
   initNavigation();
   initAtbash();
   initCaesar();

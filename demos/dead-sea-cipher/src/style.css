@@ -22,6 +22,19 @@
   --shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
+html[data-theme='light'] {
+  --bg-primary: color-mix(in srgb, Canvas 96%, var(--accent) 4%);
+  --bg-secondary: color-mix(in srgb, Canvas 90%, var(--accent) 10%);
+  --bg-card: color-mix(in srgb, Canvas 94%, var(--accent) 6%);
+  --bg-input: color-mix(in srgb, Canvas 86%, var(--accent) 14%);
+  --border: color-mix(in srgb, CanvasText 18%, Canvas 82%);
+  --border-active: color-mix(in srgb, var(--accent) 42%, Canvas 58%);
+  --text-primary: color-mix(in srgb, CanvasText 92%, var(--accent) 8%);
+  --text-secondary: color-mix(in srgb, CanvasText 68%, Canvas 32%);
+  --text-muted: color-mix(in srgb, CanvasText 48%, Canvas 52%);
+  --shadow: 0 2px 8px color-mix(in srgb, CanvasText 12%, transparent);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -40,6 +53,7 @@ html, body {
 }
 
 .site-header {
+  position: relative;
   text-align: center;
   padding: 2.5rem 0 1.5rem;
   border-bottom: 1px solid var(--border);
@@ -58,6 +72,33 @@ html, body {
   color: var(--text-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-card);
+  color: var(--accent);
+  border-color: var(--border-active);
+  transform: translateY(-1px);
 }
 
 .timeline-nav {
@@ -299,6 +340,14 @@ button.action-btn.danger:hover { background: var(--danger); color: var(--text-pr
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
 
 @media (max-width: 700px) {
+  .site-header {
+    padding-top: 4.5rem;
+  }
+
+  .theme-toggle {
+    top: 1rem;
+  }
+
   .cipher-io { grid-template-columns: 1fr; }
   .timeline-nav { flex-wrap: wrap; }
   .timeline-nav button { flex-basis: 33.33%; }

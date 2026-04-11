@@ -1,84 +1,35 @@
 # Dead Sea Cipher
 
-A browser-based cryptographic history demo that walks the full arc of cryptographic history — from Atbash (~600 BCE, embedded in the Hebrew Bible) through Caesar, Vigenère, the One-Time Pad, and AES-256-GCM — showing why each cipher failed and what the next one fixed.
+## What It Is
 
-Part of the [crypto-compare](https://github.com/systemslibrarian/crypto-compare) portfolio.
+Dead Sea Cipher is a browser-based interactive demo covering five eras of cryptographic history: Atbash (a simple Hebrew letter-substitution cipher from ~600 BCE), Caesar cipher (shift cipher), Vigenère cipher (polyalphabetic substitution), the One-Time Pad (XOR with a truly random key), and AES-256-GCM (authenticated symmetric encryption via the Web Crypto API with PBKDF2-SHA256 key derivation at 200,000 iterations). Each cipher is implemented in pure TypeScript with a live encoder/decoder and a working attack that demonstrates its fatal flaw — from Caesar brute-force to Kasiski examination to OTP key-reuse to GCM tamper detection. The security model progresses from no key space (Atbash) to computational security (AES-256-GCM symmetric authenticated encryption).
 
-## What This Demo Shows
+## When to Use It
 
-Every era of cryptographic history is operable: type plaintext and see real encryption, frequency analysis, and attack output live in the browser.
+- **Teaching cryptographic history end-to-end** — the demo walks from the oldest known cipher (Jeremiah's Atbash) to modern authenticated encryption in a single interactive timeline.
+- **Demonstrating why each classical cipher fails** — every panel includes a working attack so students can see the vulnerability firsthand rather than read about it.
+- **Showing AES-256-GCM authenticated encryption in the browser** — uses the Web Crypto API directly, with PBKDF2 key derivation, a random IV, and GCM integrity verification.
+- **Exploring the Hebrew Bible's use of Atbash** — the demo includes original Hebrew text rendering for Jeremiah 25:26, 51:1, and 51:41 with both Latin and Hebrew Atbash encoders.
+- **Do not use this for production encryption** — the demo is educational. Key material lives in the DOM and is never protected against side-channel extraction.
 
-| Era | Cipher | Year | Fatal Flaw |
-|-----|--------|------|-----------|
-| 1 | Atbash | ~600 BCE | Zero key space — one possible mapping |
-| 2 | Caesar | ~58 BCE | Only 25 shifts — brute force trivial |
-| 3 | Vigenère | 1553 | Repeating key — Kasiski attack |
-| 4 | One-Time Pad | 1882 | Key distribution impossible at scale |
-| 5 | AES-256-GCM | 2001 | None known — computational security |
+## Live Demo
 
-### Live Attacks
+[**systemslibrarian.github.io/crypto-lab-dead-sea-cipher/**](https://systemslibrarian.github.io/crypto-lab-dead-sea-cipher/)
 
-- **Caesar brute force:** All 25 decryptions with chi-squared ranking
-- **Kasiski examination:** Step-by-step key length recovery for Vigenère
-- **OTP key reuse:** XOR of ciphertexts reveals XOR of plaintexts, with crib dragging
-- **AES tamper detection:** Flip one bit, watch GCM authentication fail
+The demo presents a tabbed timeline (Atbash → Caesar → Vigenère → OTP → AES → Full Arc). Each tab lets you type plaintext, adjust parameters (e.g. Caesar shift 1–25, Vigenère keyword, AES passphrase), and see real-time encryption output. Every classical cipher tab includes a "Break It" button that runs the corresponding cryptanalytic attack live in the browser.
 
-## The Scripture Connection
-
-The earliest documented cipher in human history appears in the Hebrew Bible:
-
-- **Jeremiah 25:26** — "Sheshach" (ששך) is the Atbash encoding of "Babel" (בבל)
-- **Jeremiah 51:41** — Sheshach again, encoding the same enemy
-- **Jeremiah 51:1** — "Lev Kamai" (לב קמי) encodes "Chaldea" (כשדים)
-
-The prophet Jeremiah used Atbash to conceal the name of Babylon in sacred text — making this the earliest known use of a substitution cipher, approximately 2,600 years before AES.
-
-## Run Locally
+## How to Run Locally
 
 ```bash
-cd demos/dead-sea-cipher
+git clone https://github.com/systemslibrarian/crypto-lab-dead-sea-cipher.git
+cd crypto-lab-dead-sea-cipher/demos/dead-sea-cipher
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+## Part of the Crypto-Lab Suite
 
-### Build for Production
-
-```bash
-npm run build
-```
-
-Output is in `dist/`. The demo runs fully offline — no external CDN dependencies.
-
-### Run Tests
-
-```bash
-npm test
-```
-
-Verifies all test vectors:
-- `atbash('BABEL', 'latin')` → `'YZYVO'`
-- `caesarEncrypt('ATTACK AT DAWN', 3)` → `'DWWDFN DW GDZQ'`
-- `vigenereEncrypt('ATTACKATDAWN', 'LEMON')` → `'LXFOPVEFRNHR'`
-- OTP key reuse: `C1 ⊕ C2 = P1 ⊕ P2`
-- Hebrew Atbash: `בבל` → `ששך`
-
-## Historical Sources
-
-See [SOURCES.md](SOURCES.md) for complete documentation of every historical claim.
-
-## Technical Stack
-
-- **Frontend:** Vite + TypeScript (vanilla — no framework)
-- **Classical ciphers:** Pure TypeScript implementations
-- **AES-256-GCM:** Web Crypto API (`crypto.subtle`)
-- **KDF:** PBKDF2-SHA256 via Web Crypto API (200,000 iterations)
-- **Analysis:** Vanilla TypeScript (frequency analysis, Kasiski examination)
-
-## Hebrew Text Rendering
-
-This demo renders Hebrew text using Unicode with `dir="rtl"` for correct right-to-left display. Modern browsers handle this natively. The demo uses standard Hebrew Unicode block characters (U+0590–U+05FF) and requires no special fonts, though "Noto Serif Hebrew" is preferred if available.
+This demo is part of the [Crypto-Lab](https://systemslibrarian.github.io/crypto-lab/) collection of interactive cryptography demonstrations.
 
 ---
 
